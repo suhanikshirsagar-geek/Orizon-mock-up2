@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Orizon — Built Different</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=Pacifico&display=swap" rel="stylesheet">
+<style>
+:root{--k:#08060E;--k2:#0D0A18;--dp:#150828;--dm:#1E0A3C;--dh:#2D0A5E;--dv:#3B0764;--pm:#7C3AED;--pe:#A855F7;--pl:#C084FC;--lav:#E9D5FF;--lime:#AAFF00;--w:#fff;--w70:rgba(255,255,255,.7);--w40:rgba(255,255,255,.4)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--k);color:var(--w);font-family:'DM Sans',sans-serif;overflow-x:hidden}
+a{text-decoration:none;color:inherit}img{display:block;max-width:100%}
+
+.pat{position:relative}.pat::before{content:'';position:absolute;inset:0;pointer-events:none;background-image:repeating-linear-gradient(45deg,rgba(168,85,247,.07) 0,rgba(168,85,247,.07) 1px,transparent 0,transparent 50%),repeating-linear-gradient(-45deg,rgba(168,85,247,.07) 0,rgba(168,85,247,.07) 1px,transparent 0,transparent 50%);background-size:28px 28px;z-index:0}.pat>*{position:relative;z-index:1}
+.patd{position:relative}.patd::before{content:'';position:absolute;inset:0;pointer-events:none;background-image:repeating-linear-gradient(45deg,rgba(168,85,247,.13) 0,rgba(168,85,247,.13) 1px,transparent 0,transparent 50%),repeating-linear-gradient(-45deg,rgba(168,85,247,.13) 0,rgba(168,85,247,.13) 1px,transparent 0,transparent 50%);background-size:20px 20px;z-index:0}.patd>*{position:relative;z-index:1}
+
+.rv,.rl,.rr{opacity:0;transition:opacity .8s,transform .8s}.rv{transform:translateY(40px)}.rl{transform:translateX(-50px)}.rr{transform:translateX(50px)}.rv.on,.rl.on,.rr.on{opacity:1;transform:none}
+/* Safety: never leave content permanently invisible */
+@keyframes forceShow{to{opacity:1;transform:none}}
+.rv,.rl,.rr{animation:forceShow 0s 2s forwards}
+
+.bb{font-family:'Bebas Neue',sans-serif;line-height:.92;letter-spacing:.02em}
+.pac{font-family:'Pacifico',cursive}
+.wrap{max-width:1440px;margin:0 auto;padding:0 56px}
+.sec-lbl{font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--pe);margin-bottom:12px;display:block}
+.sec-ttl{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,5.5vw,88px);line-height:.92;margin-bottom:72px}
+.sec-ttl .pac{font-size:.72em;color:var(--pe)}
+
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 32px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;transition:.25s;cursor:pointer;font-family:'DM Sans',sans-serif;border:none;position:relative;overflow:hidden}
+.btn-pu{background:var(--pm);color:#fff}.btn-pu:hover{background:var(--pe);box-shadow:0 0 24px rgba(168,85,247,.45);transform:translateY(-2px)}
+.btn-pu::after{content:'';position:absolute;top:-50%;left:-60%;width:35%;height:200%;background:rgba(255,255,255,.17);transform:skewX(-20deg);opacity:0;transition:left .5s}.btn-pu:hover::after{left:150%;opacity:1}
+.btn-li{background:transparent;color:#fff;border:2px solid var(--lime)}.btn-li:hover{background:var(--lime);color:var(--k);transform:translateY(-2px)}
+.btn-wh{background:#fff;color:var(--pm)}.btn-wh:hover{background:var(--lav);transform:translateY(-2px)}
+.btn-gst{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.4)}.btn-gst:hover{border-color:#fff}
+
+/* HEADER */
+#hdr{position:fixed;top:0;left:0;right:0;height:76px;z-index:1000;transition:.3s}
+#hdr.up{background:rgba(8,6,14,.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(168,85,247,.22);box-shadow:0 2px 32px rgba(168,85,247,.08)}
+.hdr-in{display:flex;align-items:center;justify-content:space-between;height:100%}
+.logo img{height:34px;filter:brightness(20)}
+.hdr-nav{display:flex;gap:32px;align-items:center}
+.hdr-nav a{color:var(--w70);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;transition:.25s}.hdr-nav a:hover{color:var(--pe)}
+.btn-talk{background:var(--pm);color:#fff;padding:10px 24px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;transition:.25s;animation:pulse 2.5s ease-in-out infinite}
+.btn-talk:hover{background:var(--pe);animation:none;transform:scale(1.04);box-shadow:0 0 20px rgba(168,85,247,.5)}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(168,85,247,.5)}60%{box-shadow:0 0 0 10px rgba(168,85,247,0)}}
+.ham{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}.ham span{display:block;width:24px;height:2px;background:#fff;transition:.3s}
+.mob{display:none;position:fixed;inset:0;z-index:999;background:var(--k);flex-direction:column;align-items:center;justify-content:center;gap:32px}
+.mob.open{display:flex}.mob-x{position:absolute;top:24px;right:36px;font-size:36px;color:#fff;cursor:pointer;background:none;border:none}
+.mob a{font-family:'Bebas Neue',sans-serif;font-size:60px;color:#fff;letter-spacing:.04em;transition:.25s}.mob a:hover{color:var(--pe)}
+
+/* HERO */
+#hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;padding-top:76px;overflow:hidden;position:relative}
+.hero-l{display:flex;flex-direction:column;justify-content:center;padding:80px 64px 80px 72px;position:relative;z-index:2}
+.hero-ey{font-family:'Pacifico',cursive;font-size:15px;color:var(--pe);margin-bottom:28px;display:block;opacity:0;animation:fu .7s .3s forwards}
+.hero-h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(72px,7.5vw,128px);line-height:.88;margin-bottom:32px}
+.hero-h1 em{font-style:normal;color:var(--pe)}
+.hero-h1 .ol{color:transparent;-webkit-text-stroke:2px #fff}
+.hero-p{font-size:16px;line-height:1.78;color:var(--lav);max-width:440px;margin-bottom:44px;font-weight:300;opacity:0;animation:fu .7s 1s forwards}
+.hero-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:44px;opacity:0;animation:fu .7s .85s forwards}
+.htag{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:5px 14px;border-radius:999px;border:1px solid rgba(168,85,247,.35);color:var(--pl);background:rgba(168,85,247,.08)}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;opacity:0;animation:fu .7s 1.15s forwards}
+@keyframes fu{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+.hero-r{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.hero-r-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:80%;height:80%;background:radial-gradient(ellipse,rgba(124,58,237,.3) 0%,transparent 68%);pointer-events:none;z-index:0}
+.hero-product-img{position:relative;z-index:1;width:82%;max-width:560px;object-fit:contain;filter:drop-shadow(0 30px 80px rgba(168,85,247,.5));animation:heroFloat 5s ease-in-out infinite}
+@keyframes heroFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-18px)}}
+.hero-glow{position:absolute;left:0;top:50%;transform:translateY(-50%);width:40%;height:80%;background:radial-gradient(ellipse,rgba(124,58,237,.18) 0%,transparent 70%);pointer-events:none;z-index:3}
+.scue{position:absolute;bottom:36px;left:0;display:flex;align-items:center;gap:12px;color:var(--pe);font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;z-index:4;opacity:0;animation:fu .8s 1.6s forwards}
+.scue::before{content:'';display:block;width:48px;height:1px;background:linear-gradient(to right,transparent,var(--pe));animation:tl 2s ease-in-out infinite alternate}
+@keyframes tl{from{width:24px}to{width:64px}}
+.hw{display:inline-block;opacity:0;transform:translateY(36px);transition:opacity .6s,transform .6s}.hw.on{opacity:1;transform:none}
+
+/* TWO ENGINES */
+#engines{padding:140px 0;background:var(--k)}
+.eng-grid{display:grid;grid-template-columns:3fr 2fr;border-radius:28px;overflow:hidden;min-height:640px}
+.eng-l{position:relative;overflow:hidden}
+.eng-l-img{position:absolute;inset:0;background-size:cover;background-position:center;filter:saturate(.3) brightness(.5);transition:transform 6s}.eng-l:hover .eng-l-img{transform:scale(1.04)}
+.eng-l-ov{position:absolute;inset:0;background:linear-gradient(120deg,rgba(107,33,168,.72) 0%,rgba(8,6,14,.3) 100%)}
+.eng-l-sl{position:absolute;right:-2px;top:0;bottom:0;width:88px;clip-path:polygon(55% 0,100% 0,100% 100%,0 100%);background:var(--dh);z-index:1}
+.eng-l-bd{position:relative;z-index:2;padding:64px 56px;height:100%;display:flex;flex-direction:column;justify-content:flex-end}
+.etag{display:inline-flex;align-self:flex-start;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:5px 14px;border-radius:999px;background:rgba(168,85,247,.15);border:1px solid rgba(168,85,247,.4);color:var(--pl);margin-bottom:18px;width:fit-content}
+.eng-h3{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,3.2vw,58px);line-height:.95;margin-bottom:22px}
+.eng-bul{list-style:none;margin-bottom:36px}
+.eng-bul li{font-size:13.5px;color:var(--lav);line-height:1.65;padding:5px 0;display:flex;align-items:flex-start;gap:10px}
+.eng-bul li::before{content:'';flex-shrink:0;width:5px;height:5px;border-radius:50%;background:var(--pe);margin-top:8px}
+.eng-r{background:var(--dh);position:relative;overflow:hidden;padding:64px 48px;display:flex;flex-direction:column;justify-content:flex-end}
+.eng-r-pat{position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,rgba(168,85,247,.13) 0,rgba(168,85,247,.13) 1px,transparent 0,transparent 50%),repeating-linear-gradient(-45deg,rgba(168,85,247,.13) 0,rgba(168,85,247,.13) 1px,transparent 0,transparent 50%);background-size:18px 18px}
+.eng-r-ph{position:absolute;top:0;left:0;right:0;height:48%;background-size:cover;background-position:top center;opacity:.28;mask-image:linear-gradient(to bottom,black 30%,transparent 100%)}
+.eng-r-bd{position:relative;z-index:2}
+
+/* RANGES */
+#ranges{padding:140px 0;background:var(--dm)}
+.r-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.rcard{border-radius:24px;overflow:hidden;display:flex;flex-direction:column;position:relative}
+.rc1{background:var(--k);border:1px solid rgba(168,85,247,.28);box-shadow:0 0 50px rgba(168,85,247,.07)}
+.rc2{background:var(--pm)}
+.rc2-pat{position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.07) 0,rgba(255,255,255,.07) 1px,transparent 0,transparent 50%),repeating-linear-gradient(-45deg,rgba(255,255,255,.07) 0,rgba(255,255,255,.07) 1px,transparent 0,transparent 50%);background-size:16px 16px;pointer-events:none}
+.rcard-imgs{height:280px;position:relative;overflow:hidden;flex-shrink:0}
+.rci{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity .9s}.rci.on{opacity:1}
+.rcard-bd{padding:36px;position:relative;z-index:2;flex:1;display:flex;flex-direction:column;gap:16px}
+.rcard-title{font-family:'Bebas Neue',sans-serif;font-size:34px;line-height:1}
+.rcard-desc{font-size:13.5px;line-height:1.75;color:var(--lav)}.rc2 .rcard-desc{color:rgba(255,255,255,.82)}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:auto}
+.chip{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border-radius:999px}
+.chip-pu{background:rgba(168,85,247,.14);border:1px solid rgba(168,85,247,.4);color:var(--pl)}
+.chip-li{background:rgba(170,255,0,.1);border:1px solid rgba(170,255,0,.4);color:var(--lime)}
+
+/* QUOTE */
+#quote{display:grid;grid-template-columns:1fr 1fr;min-height:580px;overflow:hidden}
+.q-img{position:relative;overflow:hidden}
+.q-bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:saturate(.4) brightness(.6);transition:transform 7s}
+#quote:hover .q-bg{transform:scale(1.05)}
+.q-ov{position:absolute;inset:0;background:rgba(107,33,168,.28)}
+.q-text{background:var(--k);padding:88px 72px;display:flex;flex-direction:column;justify-content:center}
+.q-mark{font-family:'Pacifico',cursive;font-size:100px;color:var(--pe);opacity:.4;line-height:.7;margin-bottom:10px}
+.q-body{font-size:clamp(17px,1.8vw,22px);line-height:1.78;font-weight:300;font-style:italic;color:#fff;margin-bottom:36px}
+.q-auth{font-size:13px;color:var(--pe);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.q-sub{font-size:12px;color:var(--lav);margin-top:4px}
+.q-line{height:2px;width:0;background:var(--lime);margin-top:14px;transition:width 1.4s ease .2s}.q-line.on{width:180px}
+
+/* STATS */
+#stats{padding:140px 0;background:var(--k);overflow:hidden;position:relative}
+.stats-pac{font-family:'Pacifico',cursive;font-size:18px;color:var(--pe);text-align:center;margin-bottom:72px}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+.scard{border-radius:22px;padding:52px 32px;text-align:center;background:rgba(168,85,247,.04);border:1px solid rgba(168,85,247,.13);position:relative;overflow:hidden}
+.sg-glow{position:absolute;top:0;left:50%;transform:translateX(-50%);width:70%;height:50%;background:radial-gradient(ellipse,rgba(168,85,247,.2) 0%,transparent 70%);pointer-events:none}
+.sg-glow.lime{background:radial-gradient(ellipse,rgba(170,255,0,.14) 0%,transparent 70%)}
+.sg{height:110px;display:flex;align-items:center;justify-content:center;margin-bottom:24px}
+.snum{font-family:'Bebas Neue',sans-serif;font-size:96px;line-height:1;color:#fff;text-shadow:0 0 40px rgba(168,85,247,.55)}
+.snum.lime{color:var(--lime);text-shadow:0 0 40px rgba(170,255,0,.5)}
+.slbl{font-size:13px;color:var(--lav);margin-top:10px;letter-spacing:.05em}
+
+/* PROCESS */
+#process{padding:140px 0;background:var(--dh)}
+.proc-grid{display:grid;grid-template-columns:repeat(4,1fr);position:relative;gap:0}
+.proc-line{position:absolute;top:78px;left:calc(12.5% + 14px);right:calc(12.5% + 14px);height:2px;background:rgba(168,85,247,.2)}
+.proc-fill{height:100%;width:0;background:var(--pe);box-shadow:0 0 10px var(--pe);transition:width 2.2s ease .3s}.proc-fill.on{width:100%}
+.proc-step{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 14px;position:relative;z-index:1}
+.proc-img{width:110px;height:110px;border-radius:14px;object-fit:cover;margin-bottom:22px;border:2px solid rgba(168,85,247,.32);filter:saturate(.55) brightness(.75)}
+.proc-num{font-family:'Pacifico',cursive;font-size:48px;color:var(--lime);line-height:1;margin-bottom:12px}
+.proc-title{font-family:'Bebas Neue',sans-serif;font-size:21px;margin-bottom:8px}
+.proc-desc{font-size:12.5px;color:var(--lav);line-height:1.65}
+
+/* PRODUCT SECTIONS */
+#ds{padding:140px 0;background:var(--k);position:relative;overflow:hidden}
+#eg{padding:140px 0;background:var(--k2);position:relative;overflow:hidden}
+.ds-glow{position:absolute;right:-5%;top:50%;transform:translateY(-50%);width:55vw;height:90%;background:radial-gradient(ellipse,rgba(168,85,247,.18) 0%,transparent 68%);pointer-events:none}
+.eg-glow{position:absolute;left:-5%;top:50%;transform:translateY(-50%);width:55vw;height:90%;background:radial-gradient(ellipse,rgba(168,85,247,.15) 0%,transparent 68%);pointer-events:none}
+.prod-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.prod-grid.flip{direction:rtl}.prod-grid.flip>*{direction:ltr}
+.prod-logo{height:52px;width:auto;margin-bottom:28px;filter:brightness(20)}
+.prod-h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(56px,5.5vw,92px);line-height:.88;margin-bottom:16px}
+.prod-pac{font-family:'Pacifico',cursive;font-size:19px;color:var(--pe);margin-bottom:34px;display:block}
+.ptabs{display:flex;gap:0;border:1px solid rgba(168,85,247,.3);border-radius:12px;overflow:hidden;margin-bottom:28px}
+.ptab{flex:1;padding:12px 8px;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;background:transparent;color:var(--lav);border:none;cursor:pointer;text-align:center;transition:.25s;font-family:'DM Sans',sans-serif;min-width:0}
+.ptab.act{background:var(--pm);color:#fff}.egtabs .ptab.act{background:var(--lime);color:var(--k)}
+.ptc{font-size:15px;color:var(--lav);line-height:1.8;min-height:88px;margin-bottom:36px}
+.prod-stage{position:relative;width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center}
+.pci{position:absolute;width:76%;aspect-ratio:1;object-fit:contain;opacity:0;transition:opacity .85s;filter:drop-shadow(0 20px 60px rgba(168,85,247,.4));animation:pf 5s ease-in-out infinite;z-index:2}
+.pci.on{opacity:1}
+@keyframes pf{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
+.p-ring{position:absolute;top:50%;left:50%;width:86%;aspect-ratio:1;border:1px solid rgba(168,85,247,.2);border-radius:50%;animation:sp 14s linear infinite;transform-origin:50% 50%}
+.p-ring::after{content:'';position:absolute;top:-5px;left:50%;width:9px;height:9px;background:var(--pe);border-radius:50%;transform:translateX(-50%);box-shadow:0 0 12px var(--pe)}
+.p-ring2{position:absolute;top:50%;left:50%;width:110%;aspect-ratio:1;border:1px dashed rgba(170,255,0,.14);border-radius:50%;animation:sp 24s linear infinite reverse;transform-origin:50% 50%}
+.p-ring2::after{content:'';position:absolute;bottom:-5px;left:50%;width:9px;height:9px;background:var(--lime);border-radius:50%;transform:translateX(-50%);box-shadow:0 0 12px var(--lime)}
+@keyframes sp{from{transform:translate(-50%,-50%) rotate(0)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+
+/* BAND */
+.band{height:340px;overflow:hidden;position:relative;clip-path:polygon(0 6%,100% 0,100% 94%,0 100%)}
+.band-bg{position:absolute;inset:-6%;background-size:cover;background-position:center;filter:saturate(.3) brightness(.45);transition:transform 7s}.band:hover .band-bg{transform:scale(1.04)}
+.band-ov{position:absolute;inset:0;background:linear-gradient(90deg,rgba(107,33,168,.55),rgba(8,6,14,.25))}
+.band-txt{position:absolute;left:80px;top:50%;transform:translateY(-50%);z-index:2}
+.band-txt h3{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,4vw,68px);line-height:.9}
+.band-txt .pac{font-size:clamp(15px,1.5vw,21px);color:var(--pe);margin-top:10px;display:block}
+
+/* PILLARS */
+#pillars{padding:140px 0;background:var(--k)}
+.pbar{display:flex;gap:0;border-bottom:1px solid rgba(168,85,247,.2);overflow-x:auto;scrollbar-width:none;margin-bottom:56px}
+.pbar::-webkit-scrollbar{display:none}
+.pbtn{padding:14px 22px;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;background:none;border:none;color:var(--w40);cursor:pointer;white-space:nowrap;position:relative;transition:.25s;font-family:'DM Sans',sans-serif}
+.pbtn.act{color:#fff}.pbtn.act::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:3px;background:var(--pe);box-shadow:0 0 10px var(--pe)}
+.ppane{display:none;grid-template-columns:1fr 1fr;gap:80px;align-items:center}.ppane.act{display:grid}
+.pp-img{border-radius:20px;overflow:hidden;aspect-ratio:4/3}.pp-img img{width:100%;height:100%;object-fit:cover;filter:saturate(.6) brightness(.8)}
+.pp-ttl{font-family:'Bebas Neue',sans-serif;font-size:clamp(40px,4vw,64px);line-height:1;margin-bottom:18px}
+.pp-body{font-size:15px;color:var(--lav);line-height:1.8;margin-bottom:18px}
+.pp-stat{font-size:12px;color:var(--pe);font-weight:700;letter-spacing:.07em;text-transform:uppercase}
+
+/* ABOUT */
+#about-strip{padding:140px 0;background:var(--dm)}
+.ab-grid{display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:center}
+.ab-stack{position:relative;height:520px}
+.ab-main{position:absolute;top:0;left:0;width:75%;height:80%;border-radius:20px;object-fit:cover;filter:saturate(.6) brightness(.8);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.ab-acc{position:absolute;bottom:0;right:0;width:55%;height:55%;border-radius:16px;object-fit:cover;filter:saturate(.6) brightness(.8);border:3px solid var(--pm);box-shadow:0 0 30px rgba(168,85,247,.3)}
+.ab-phases{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:36px}
+.ab-ph{padding:20px;border-radius:14px;background:rgba(168,85,247,.07);border:1px solid rgba(168,85,247,.18)}
+.ab-ph-n{font-family:'Pacifico',cursive;font-size:36px;color:var(--lime);line-height:1;margin-bottom:8px}
+.ab-ph-t{font-family:'Bebas Neue',sans-serif;font-size:17px;margin-bottom:6px}
+.ab-ph-d{font-size:12px;color:var(--lav);line-height:1.6}
+
+/* VALUES */
+#values{padding:140px 0;background:var(--k)}
+.val-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.val-card{padding:32px;border-radius:18px;background:rgba(168,85,247,.04);border:1px solid rgba(168,85,247,.12);transition:border-color .3s,box-shadow .3s}
+.val-card:hover{border-color:rgba(168,85,247,.4);box-shadow:0 0 30px rgba(168,85,247,.1)}
+.val-icon{width:44px;height:44px;border-radius:12px;background:rgba(168,85,247,.15);border:1px solid rgba(168,85,247,.3);display:flex;align-items:center;justify-content:center;margin-bottom:18px;font-size:18px}
+.val-title{font-family:'Bebas Neue',sans-serif;font-size:22px;margin-bottom:10px}
+.val-desc{font-size:13.5px;color:var(--lav);line-height:1.72}
+
+/* BRANDS */
+#brands{padding:140px 0;background:var(--dm)}
+.brands-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.bcard{border-radius:22px;overflow:hidden;background:var(--k);border:1px solid rgba(168,85,247,.18);display:flex;flex-direction:column;transition:transform .3s}.bcard:hover{transform:translateY(-6px)}
+.bcard-img{height:180px;background-size:cover;background-position:center;filter:saturate(.5) brightness(.6)}
+.bcard-logo{padding:28px 28px 0}.bcard-logo img{height:36px;filter:brightness(20);width:auto}
+.bcard-bd{padding:20px 28px 32px}
+.bcard-title{font-family:'Bebas Neue',sans-serif;font-size:24px;margin-bottom:10px}
+.bcard-desc{font-size:13.5px;color:var(--lav);line-height:1.7;margin-bottom:20px}
+
+/* STORIES */
+#stories{padding:140px 0;background:var(--dp)}
+.st-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.stcard{border-radius:18px;overflow:hidden;background:var(--dm);border:1px solid rgba(168,85,247,.15);transition:transform .3s,box-shadow .3s}.stcard:hover{transform:translateY(-8px);box-shadow:0 20px 60px rgba(168,85,247,.15)}
+.stcard-img{height:220px;background-size:cover;background-position:center;position:relative}
+.stcard-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(30,10,60,.9))}
+.stcat{position:absolute;top:14px;left:14px;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 12px;border-radius:999px;background:var(--pm);color:#fff}
+.stcard-bd{padding:24px}
+.stcard-t{font-family:'Bebas Neue',sans-serif;font-size:22px;line-height:1.1;margin-bottom:10px}
+.stcard-d{font-size:12px;color:var(--w40)}
+
+/* PARTNERS TICKER */
+#partners{padding:80px 0;background:var(--dp);border-top:1px solid rgba(168,85,247,.2);border-bottom:1px solid rgba(168,85,247,.2);overflow:hidden}
+.par-lbl{text-align:center;font-family:'Pacifico',cursive;font-size:14px;color:var(--pe);margin-bottom:28px}
+.tkr{display:flex;gap:60px;width:max-content;animation:tk 22s linear infinite}.tkr.rev{animation-direction:reverse;margin-top:20px}
+.tkr-item img{height:34px;width:auto;filter:brightness(20) opacity(.45);transition:.3s}.tkr-item:hover img{opacity:1}
+@keyframes tk{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* FAQ */
+#faq{padding:140px 0;background:var(--k)}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.faq-list{display:flex;flex-direction:column;gap:2px}
+.fq{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 24px;background:rgba(168,85,247,.05);border:1px solid rgba(168,85,247,.13);border-radius:12px;cursor:pointer;font-size:14px;font-weight:600;color:#fff;transition:.25s;margin-bottom:2px}
+.fq:hover,.fq.open{background:rgba(168,85,247,.1);border-color:rgba(168,85,247,.35)}
+.fq.open{border-radius:12px 12px 0 0}
+.fa-arr{font-size:20px;color:var(--pe);transition:transform .3s;flex-shrink:0}.fq.open .fa-arr{transform:rotate(45deg)}
+.fa{display:none;padding:18px 24px;background:rgba(168,85,247,.05);border:1px solid rgba(168,85,247,.13);border-top:none;border-radius:0 0 12px 12px;font-size:13.5px;color:var(--lav);line-height:1.75;margin-bottom:2px}.fa.open{display:block}
+
+/* CTA SLIDER */
+#cta{padding:140px 0;background:var(--dp)}
+.cta-hed{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,6.5vw,106px);line-height:.88;text-align:center;margin-bottom:72px}
+.cta-hed .pac-l{display:block;font-family:'Pacifico',cursive;font-size:.64em;color:var(--pe)}
+.sl-ov{overflow:hidden;border-radius:24px}
+.sl-tr{display:flex;transition:transform .6s cubic-bezier(.4,0,.2,1)}
+.sl-sl{min-width:100%}
+.slcard{display:grid;grid-template-columns:1fr 1fr;min-height:400px;border-radius:24px;overflow:hidden}
+.sc1{background:var(--k);border:1px solid rgba(168,85,247,.35);border-left:4px solid var(--pe)}
+.sc2{background:var(--dh)}.sc3l{background:var(--pm)}.sc3r{background:var(--k)}
+.sc-txt{padding:60px;display:flex;flex-direction:column;justify-content:center}
+.sc-kick{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--pe);margin-bottom:18px}.sc-kick.lime{color:var(--lime)}
+.sc-h3{font-family:'Bebas Neue',sans-serif;font-size:clamp(30px,3.2vw,50px);line-height:1;margin-bottom:14px}
+.sc-p{font-size:14px;color:var(--lav);line-height:1.72;margin-bottom:32px}
+.sc-img{position:relative;overflow:hidden}.sc-bg{position:absolute;inset:0;background-size:cover;background-position:center}.sc-ov{position:absolute;inset:0}
+.sc-big{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,6vw,92px);line-height:.9;margin-bottom:12px}
+.sc-pac{font-family:'Pacifico',cursive;font-size:22px;color:var(--lime);margin-bottom:30px}
+.sl-ctrl{display:flex;align-items:center;justify-content:center;gap:22px;margin-top:36px}
+.sl-btn{width:52px;height:52px;border-radius:50%;border:2px solid var(--pe);background:transparent;color:var(--pe);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.25s}
+.sl-btn:hover{background:var(--pe);color:#fff;box-shadow:0 0 18px rgba(168,85,247,.4)}
+.sl-dots{display:flex;gap:8px}.sl-dot{width:8px;height:8px;border-radius:999px;background:rgba(168,85,247,.3);cursor:pointer;transition:.3s}.sl-dot.act{background:var(--pe);width:24px;box-shadow:0 0 8px var(--pe)}
+
+/* CONTACT */
+#contact{padding:160px 0;background:var(--dp);text-align:center;position:relative;overflow:hidden}
+.ct-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60%;height:60%;background:radial-gradient(ellipse,rgba(168,85,247,.18) 0%,transparent 70%);pointer-events:none}
+.ct-h{font-family:'Bebas Neue',sans-serif;font-size:clamp(56px,7vw,120px);line-height:.88;margin-bottom:24px}
+.ct-h .pac{display:block;font-size:.6em;color:var(--pe)}
+.ct-p{font-size:17px;color:var(--lav);max-width:520px;margin:0 auto 48px;line-height:1.75;font-weight:300}
+.ct-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.ct-email{margin-top:48px;font-size:13px;color:var(--w40);letter-spacing:.06em}
+.ct-email a{color:var(--pe);font-weight:600}
+
+/* FOOTER */
+footer{background:var(--k);padding:88px 0 44px;position:relative;overflow:hidden;border-top:1px solid rgba(168,85,247,.16)}
+.ft-glow{position:absolute;top:0;left:50%;transform:translateX(-50%);width:55%;height:180px;background:radial-gradient(ellipse,rgba(168,85,247,.08) 0%,transparent 70%);pointer-events:none}
+.ft-wm{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font-family:'Bebas Neue',sans-serif;font-size:clamp(80px,14vw,200px);letter-spacing:.1em;color:rgba(255,255,255,.022);white-space:nowrap;pointer-events:none;user-select:none}
+.ft-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:56px;margin-bottom:60px;position:relative;z-index:1}
+.ft-logo img{height:36px;filter:brightness(20);margin-bottom:18px}
+.ft-tag{font-size:13.5px;color:var(--lav);line-height:1.75;max-width:300px}
+.ft-ch{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--pe);margin-bottom:18px}
+.ft-links{list-style:none;display:flex;flex-direction:column;gap:11px}.ft-links a{color:var(--w70);font-size:13.5px;transition:.25s}.ft-links a:hover{color:#fff}
+.ft-bot{border-top:1px solid rgba(168,85,247,.13);padding-top:28px;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}
+.ft-copy{font-size:12.5px;color:var(--lav)}
+.ft-soc{display:flex;gap:12px}.ft-soc a{width:36px;height:36px;border-radius:50%;border:1px solid rgba(168,85,247,.3);display:flex;align-items:center;justify-content:center;color:var(--pe);font-size:13px;font-weight:700;transition:.25s}.ft-soc a:hover{background:var(--pm);border-color:var(--pm);color:#fff;box-shadow:0 0 14px rgba(168,85,247,.4)}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+  #hero{grid-template-columns:1fr}.hero-r{display:none}.hero-l{padding:60px 28px}
+  .eng-grid,.prod-grid,.ab-grid{grid-template-columns:1fr}.prod-grid.flip{direction:ltr}.eng-l-sl{display:none}
+  .r-grid,.ppane.act,.brands-grid,.st-grid,.val-grid{grid-template-columns:1fr}
+  #quote{grid-template-columns:1fr}.q-img{height:280px}
+  .stats-grid{grid-template-columns:1fr}.proc-grid{grid-template-columns:1fr 1fr;gap:40px}.proc-line{display:none}
+  .slcard{grid-template-columns:1fr}.sc-img,.sc3r{display:none}
+  .ft-top{grid-template-columns:1fr 1fr;gap:36px}
+  .faq-grid{grid-template-columns:1fr}.ab-stack{height:320px}.ab-phases{grid-template-columns:1fr}
+}
+@media(max-width:768px){
+  .hdr-nav{display:none}.ham{display:flex}
+  .eng-grid,.r-grid,.brands-grid,.st-grid,.val-grid,.ppane.act,.faq-grid,.proc-grid{grid-template-columns:1fr}
+  .ft-top{grid-template-columns:1fr;gap:28px}.ft-bot{flex-direction:column;gap:18px;text-align:center}
+  .q-text,.sc-txt{padding:40px 28px}.band-txt{left:28px}.ab-grid{gap:48px}
+  .wrap{padding:0 24px}
+}
+</style>
+</head>
+<body>
+
+<div class="mob" id="mob">
+  <button class="mob-x" id="mobX">&times;</button>
+  <a href="#">Home</a><a href="#">About</a><a href="#">Our Brands</a><a href="#">Press</a>
+  <a href="#" style="color:var(--pe)">Let's Talk</a>
+</div>
+
+<header id="hdr">
+  <div class="wrap hdr-in">
+    <a href="#" class="logo"><img src="https://orizon-hub.com/wp-content/uploads/2024/11/Orizon_white_transparent.png" alt="Orizon"></a>
+    <nav class="hdr-nav">
+      <a href="#">About</a><a href="#">Our Values</a><a href="#">Our Brands</a><a href="#">Press</a>
+    </nav>
+    <div style="display:flex;align-items:center;gap:16px">
+      <a href="#" class="btn-talk">Let's Talk</a>
+      <button class="ham" id="ham"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <div class="wrap hero-l">
+    <span class="hero-ey">Europe-first. Global-ready.</span>
+    <h1 class="hero-h1">
+      <span class="hw">BUILT</span><br>
+      <span class="hw ol">DIFFERENT.</span><br>
+      <span class="hw">BUILT TO <em>SCALE.</em></span>
+    </h1>
+    <p class="hero-p">Orizon develops and scales gaming accessory brands through distribution and retail partnerships — designed for durable shelf presence, not one-off drops.</p>
+    <div class="hero-tags">
+      <span class="htag">Core Ranges</span><span class="htag">Licensed Editions</span>
+      <span class="htag">Retail-Ready</span><span class="htag">Europe Specialist</span><span class="htag">Global Expansion</span>
+    </div>
+    <div class="hero-btns">
+      <a href="#" class="btn btn-pu">Explore Our Ranges</a>
+      <a href="#" class="btn btn-li">Meet the Brands</a>
+    </div>
+  </div>
+  <div class="hero-r">
+    <div class="hero-r-glow"></div>
+    <img class="hero-product-img" src="https://orizon-hub.com/wp-content/uploads/2024/11/Dragon-Shock-Aurora.png" alt="DragonShock Aurora">
+  </div>
+  <div class="scue">Scroll to explore</div>
+</section>
+
+<!-- TWO ENGINES -->
+<section id="engines" class="pat">
+  <div class="wrap">
+    <span class="sec-lbl rv">Two Verticals. One Direction.</span>
+    <h2 class="sec-ttl bb rv">TWO ENGINES.<br><span class="pac">One retail mission.</span></h2>
+    <div class="eng-grid">
+      <div class="eng-l">
+        <div class="eng-l-img" style="background-image:url('https://orizon-hub.com/wp-content/uploads/2024/11/DSCNSW-BW_Amazon_01-1.png&quot')"></div>
+        <div class="eng-l-ov"></div><div class="eng-l-sl"></div>
+        <div class="eng-l-bd">
+          <span class="etag">Distribution &amp; Retail</span>
+          <h3 class="eng-h3 bb" style="font-size:clamp(22px,1.8vw,32px)">Rollouts at scale<br>Europe &amp; beyond</h3>
+          <ul class="eng-bul">
+            <li>Distribution partner setup and day-to-day management</li>
+            <li>Key retail rollouts and activation — in-store and online</li>
+            <li>Forecasting, replenishment, and launch calendars built for scale</li>
+            <li>Europe specialist — built to expand internationally</li>
+          </ul>
+          <a href="#" class="btn btn-pu" style="align-self:flex-start;padding:14px 32px">Discuss Distribution</a>
+        </div>
+      </div>
+      <div class="eng-r">
+        <div class="eng-r-pat"></div>
+        <div class="eng-r-ph" style="background-image:url('https://orizon-hub.com/wp-content/uploads/2024/11/Design-sans-titre-11-866x1024.png')"></div>
+        <div class="eng-r-bd">
+          <span class="etag" style="background:rgba(170,255,0,.08);border-color:rgba(170,255,0,.3);color:var(--lime)">Brand &amp; Product</span>
+          <h3 class="eng-h3 bb">DragonShock &amp;<br>EgoGear</h3>
+          <ul class="eng-bul" style="margin-bottom:32px">
+            <li>Multi-platform accessories across all key categories</li>
+            <li>Retail-ready packaging and merchandising toolkits</li>
+            <li>Core lines plus selected official licensed editions</li>
+          </ul>
+          <a href="#" class="btn btn-li" style="align-self:flex-start;padding:12px 32px">Discover Our Brands</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPLETE RANGES -->
+<section id="ranges" class="patd">
+  <div class="wrap">
+    <span class="sec-lbl rv">Product Portfolio</span>
+    <h2 class="sec-ttl bb rv">COMPLETE RANGES THAT <span class="pac" style="color:var(--lime)">perform.</span></h2>
+    <div class="r-grid">
+      <div class="rcard rc1 rl">
+        <div class="rcard-imgs" id="rc1">
+          <div class="rci on" style="background-image:url('https://orizon-hub.com/wp-content/uploads/2025/02/RGC02-PS2-BK-3D-03.png')"></div>
+          <div class="rci" style="background-image:url('https://orizon-hub.com/wp-content/uploads/2025/02/RGB-Sound-Bar.jpg')"></div>
+          <div class="rci" style="background-image:url('https://orizon-hub.com/wp-content/uploads/2024/11/Design-sans-titre-12-1024x644.png')"></div>
+          <div class="rci" style="background-image:url('https://orizon-hub.com/wp-content/uploads/2024/11/2-1.png')"></div>
+        </div>
+        <div class="rcard-bd">
+          <h3 class="rcard-title bb">Core Accessory Ranges</h3>
+          <p class="rcard-desc">Everyday winners designed for repeat purchase and durable shelf presence — built for the realities of retail and e-commerce.</p>
+          <div class="chips"><span class="chip chip-pu">Controllers</span><span class="chip chip-pu">Headsets</span><span class="chip chip-pu">Cables</span><span class="chip chip-pu">Charging</span><span class="chip chip-pu">Mice</span></div>
+        </div>
+      </div>
+      <div class="rcard rc2 rr" style="position:relative">
+        <div class="rc2-pat"></div>
+        <div class="rcard-imgs" id="rc2">
+          <div class="rci on" style="background-image:url('https://orizon-hub.com/wp-content/uploads/2025/02/Poptop-Nebula-controllers-2432x504-1.jpg')"></div>
+          <div class="rci" style="background-image:url('https://orizon-hub.com/wp-content/uploads/2025/02/Orizon-article-main-image-2.png')"></div>
+          <div class="rci" style="background-image:url('https://orizon-hub.com/wp-content/uploads/2024/11/Design-sans-titre-12-1024x644.png')"></div>
+        </div>
+        <div class="rcard-bd">
+          <h3 class="rcard-title bb">Official Licensed Editions</h3>
+          <p class="rcard-desc" style="color:rgba(255,255,255,.82)">High-impact collections built as complete retail programs — assets, launch calendars, and execution support included.</p>
+          <div class="chips"><span class="chip chip-li">IP Storytelling</span><span class="chip chip-li">Seasonal Peaks</span><span class="chip chip-li">Retail Programs</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTE -->
+<section id="quote">
+  <div class="q-img">
+    <div class="q-bg" style="background-image:url('https://orizon-hub.com/wp-content/uploads/2024/12/1.png')"></div>
+    <div class="q-ov"></div>
+  </div>
+  <div class="q-text rv">
+    <span class="q-mark">"</span>
+    <p class="q-body">Our greatest challenge is to design products that meet today's needs without compromising the ability of future generations to meet their own. This is the essence of sustainability.</p>
+    <div><p class="q-auth">Gro Harlem Brundtland</p><p class="q-sub">Former Prime Minister of Norway</p><div class="q-line"></div></div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section id="stats">
+  <div class="wrap">
+    <p class="stats-pac rv">The numbers speak</p>
+    <div class="stats-grid">
+      <div class="scard rv"><div class="sg-glow"></div>
+        <div class="sg"><svg width="180" height="100" viewBox="0 0 180 100"><g id="wDots" fill="rgba(168,85,247,.25)"><circle cx="22" cy="32" r="2.5"/><circle cx="38" cy="26" r="2"/><circle cx="54" cy="30" r="2.5"/><circle cx="68" cy="28" r="2"/><circle cx="84" cy="22" r="2"/><circle cx="100" cy="32" r="2.5"/><circle cx="114" cy="28" r="2"/><circle cx="130" cy="26" r="2"/><circle cx="146" cy="32" r="2.5"/><circle cx="158" cy="30" r="2"/><circle cx="28" cy="48" r="2"/><circle cx="46" cy="45" r="2.5"/><circle cx="62" cy="50" r="2"/><circle cx="78" cy="47" r="2.5"/><circle cx="94" cy="45" r="2"/><circle cx="108" cy="52" r="2.5"/><circle cx="124" cy="48" r="2"/><circle cx="140" cy="50" r="2.5"/><circle cx="154" cy="46" r="2"/><circle cx="42" cy="66" r="2.5"/><circle cx="58" cy="62" r="2"/><circle cx="74" cy="68" r="2"/><circle cx="90" cy="65" r="2.5"/><circle cx="106" cy="70" r="2"/><circle cx="120" cy="66" r="2.5"/><circle cx="136" cy="68" r="2"/><circle cx="152" cy="63" r="2.5"/></g></svg></div>
+        <div class="snum bb" data-t="50" data-s="+">0</div><div class="slbl">Countries Active</div>
+      </div>
+      <div class="scard rv" style="transition-delay:.18s"><div class="sg-glow"></div>
+        <div class="sg"><svg width="160" height="100" viewBox="0 0 160 100"><rect class="bar" data-h="55" x="8" y="100" width="20" height="0" fill="#7C3AED" rx="3"/><rect class="bar" data-h="75" x="38" y="100" width="20" height="0" fill="#A855F7" rx="3"/><rect class="bar" data-h="42" x="68" y="100" width="20" height="0" fill="#7C3AED" rx="3"/><rect class="bar" data-h="88" x="98" y="100" width="20" height="0" fill="#A855F7" rx="3"/><rect class="bar" data-h="65" x="128" y="100" width="20" height="0" fill="#7C3AED" rx="3"/></svg></div>
+        <div class="snum bb" data-t="35" data-s="+">0</div><div class="slbl">Retail Groups / Distribution Partners</div>
+      </div>
+      <div class="scard rv" style="transition-delay:.36s"><div class="sg-glow lime"></div>
+        <div class="sg"><svg width="120" height="110" viewBox="0 0 120 110"><circle cx="60" cy="60" r="44" fill="none" stroke="rgba(170,255,0,.1)" stroke-width="9"/><circle id="arc" cx="60" cy="60" r="44" fill="none" stroke="#AAFF00" stroke-width="9" stroke-dasharray="276" stroke-dashoffset="276" stroke-linecap="round" transform="rotate(-90 60 60)" style="transition:stroke-dashoffset 2s ease;filter:drop-shadow(0 0 8px #AAFF00)"/></svg></div>
+        <div class="snum bb lime" data-t="240" data-s="k+">0</div><div class="slbl">Units Shipped</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process" class="pat">
+  <div class="wrap">
+    <span class="sec-lbl rv">How It Works</span>
+    <h2 class="sec-ttl bb rv" style="margin-bottom:100px">RETAIL-GRADE EXECUTION,<br><span class="pac">built for repeatable outcomes</span></h2>
+    <div class="proc-grid rv">
+      <div class="proc-line"><div class="proc-fill" id="pf"></div></div>
+      <div class="proc-step"><img class="proc-img" src="https://orizon-hub.com/wp-content/uploads/2025/02/Orizon-article-main-image-2.png" alt=""><div class="proc-num pac">1</div><div class="proc-title bb">Range Strategy</div><p class="proc-desc">Assortment design, pricing ladder, channel fit.</p></div>
+      <div class="proc-step"><img class="proc-img" src="https://orizon-hub.com/wp-content/uploads/2025/02/RGC02-PS2-BK-3D-03.png" alt=""><div class="proc-num pac">2</div><div class="proc-title bb">Product &amp; Packaging</div><p class="proc-desc">Design, sourcing, QA, retail-ready packaging.</p></div>
+      <div class="proc-step"><img class="proc-img" src="https://orizon-hub.com/wp-content/uploads/2025/02/RGB-Sound-Bar.jpg" alt=""><div class="proc-num pac">3</div><div class="proc-title bb">Retail Rollout</div><p class="proc-desc">Distribution partners, key retailers, launch calendars and assets.</p></div>
+      <div class="proc-step"><img class="proc-img" src="https://orizon-hub.com/wp-content/uploads/2024/11/Design-sans-titre-12-1024x644.png" alt=""><div class="proc-num pac">4</div><div class="proc-title bb">Always-On Execution</div><p class="proc-desc">Replenishment, promo planning, retail performance support.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- DRAGONSHOCK -->
+<section id="ds"><div class="ds-glow"></div>
+  <div class="wrap">
+    <div class="prod-grid">
+      <div class="rl">
+        <img class="prod-logo" src="https://orizon-hub.com/wp-content/uploads/2025/02/DRAGON-SHOCK-LOGO-5-1024x313.png" alt="DragonShock">
+        <h2 class="prod-h2 bb">CONTROL<br>YOUR DESTINY</h2>
+        <span class="prod-pac pac">Bold energy. Serious performance.</span>
+        <div class="ptabs" id="dsTabs">
+          <button class="ptab act" data-i="0">Performance</button>
+          <button class="ptab" data-i="1">Ergonomics</button>
+          <button class="ptab" data-i="2">Design Impact</button>
+        </div>
+        <div class="ptc" id="dsTC">Advanced sensors, responsive buttons, and precision ergonomics — DragonShock builds accessories that meet the standard of serious play. Multi-platform, always.</div>
+        <a href="#" class="btn btn-pu">Discover DragonShock &rarr;</a>
+      </div>
+      <div class="rr">
+        <div class="prod-stage">
+          <div class="p-ring"></div><div class="p-ring2"></div>
+          <img class="pci on" src="https://orizon-hub.com/wp-content/uploads/2024/11/Dragon-Shock-Aurora.png" alt="">
+          <img class="pci" src="https://orizon-hub.com/wp-content/uploads/2024/11/108f2533-5c1f-48f3-a658-d2606af690de.jpeg" alt="">
+          <img class="pci" src="https://orizon-hub.com/wp-content/uploads/2024/11/DSPS4-RC.jpg" alt="">
+          <img class="pci" src="https://orizon-hub.com/wp-content/uploads/2024/11/Asset-3-1.png" alt="">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BAND -->
+<div class="band"><div class="band-bg" style="background-image:url('https://orizon-hub.com/wp-content/uploads/2024/11/108f2533-5c1f-48f3-a658-d2606af690de.jpeg')"></div><div class="band-ov"></div><div class="band-txt"><h3 class="bb">Two brands. One obsession.</h3><span class="pac">Built for every gamer.</span></div></div>
+
+<!-- EGOGEAR -->
+<section id="eg"><div class="eg-glow"></div>
+  <div class="wrap">
+    <div class="prod-grid flip egtabs">
+      <div class="rr">
+        <img class="prod-logo" src="https://orizon-hub.com/wp-content/uploads/2025/02/EG-LOGO-V2.0%EF%BC%88BLACK%EF%BC%89-2-e1739544960916-1024x541.png" alt="EgoGear" style="filter:brightness(20)">
+        <h2 class="prod-h2 bb">BE PROUD<br>OF YOUR SKILL</h2>
+        <span class="prod-pac pac" style="color:var(--lime)">Premium feel. Accessible price.</span>
+        <div class="ptabs egtabs" id="egTabs">
+          <button class="ptab act" data-i="0">Value</button>
+          <button class="ptab" data-i="1">Durability</button>
+          <button class="ptab" data-i="2">Multi-Platform</button>
+        </div>
+        <div class="ptc" id="egTC">Premium gaming accessories at a price that fits your budget. EgoGear proves quality doesn't have to cost more — built for everyday play and mass retail scale.</div>
+        <a href="#" class="btn" style="background:var(--lime);color:var(--k)">Discover EgoGear &rarr;</a>
+      </div>
+      <div class="rl">
+        <div class="prod-stage">
+          <div class="p-ring" style="border-color:rgba(170,255,0,.18)"></div>
+          <div class="p-ring2" style="border-color:rgba(168,85,247,.18)"></div>
+          <img class="pci on" src="https://orizon-hub.com/wp-content/uploads/2025/02/RGB-Sound-Bar.jpg" alt="">
+          <img class="pci" src="https://orizon-hub.com/wp-content/uploads/2025/02/RGC02-PS2-BK-3D-03.png" alt="">
+          <img class="pci" src="https://orizon-hub.com/wp-content/uploads/2024/11/2-1.png" alt="">
+          <img class="pci" src="https://orizon-hub.com/wp-content/uploads/2024/11/Design-sans-titre-11-866x1024.png" alt="">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PILLARS -->
+<section id="pillars" class="pat">
+  <div class="wrap">
+    <span class="sec-lbl rv">Our Commitments</span>
+    <h2 class="sec-ttl bb rv">BUILT ON <span class="pac">what matters</span></h2>
+    <div class="pbar rv">
+      <button class="pbtn act" data-p="0">Gaming for Everyone</button>
+      <button class="pbtn" data-p="1">Sustainability</button>
+      <button class="pbtn" data-p="2">Built to Endure</button>
+      <button class="pbtn" data-p="3">Brand Responsibility</button>
+      <button class="pbtn" data-p="4">Customer Support</button>
+      <button class="pbtn" data-p="5">Innovation</button>
+    </div>
+    <div class="ppane act" id="pp0"><div class="pp-img"><img src="https://orizon-hub.com/wp-content/uploads/2024/11/Design-sans-titre-12-1024x644.png" alt=""></div><div><h3 class="pp-ttl bb">Gaming Is For Everyone</h3><p class="pp-body">Adaptive triggers, remappable buttons, and one-handed configurations — our products make gaming inclusive for everyone, regardless of physical ability.</p><p class="pp-stat">Accessibility-first design across all product lines</p></div></div>
+    <div class="ppane" id="pp1"><div class="pp-img"><img src="https://orizon-hub.com/wp-content/uploads/2024/11/Design-sans-titre-11-866x1024.png" alt=""></div><div><h3 class="pp-ttl bb">Sustainable Is The Way Forward</h3><p class="pp-body">Recyclable packaging, durable product design, and a focus on reusability — we build products that are good for consumers and good for the planet.</p><p class="pp-stat">Recyclable packaging across all product lines</p></div></div>
+    <div class="ppane" id="pp2"><div class="pp-img"><img src="https://orizon-hub.com/wp-content/uploads/2024/11/2-1.png" alt=""></div><div><h3 class="pp-ttl bb">Built To Endure</h3><p class="pp-body">Every product is stress-tested by real gamers in real-world conditions — comfort, responsiveness, and reliability that holds up over time.</p><p class="pp-stat">Tested by real gamers in real conditions</p></div></div>
+    <div class="ppane" id="pp3"><div class="pp-img"><img src="https://orizon-hub.com/wp-content/uploads/2025/02/Orizon-article-main-image-2.png" alt=""></div><div><h3 class="pp-ttl bb">Building Brands Responsibly</h3><p class="pp-body">Innovation, quality, and customer satisfaction drive long-lasting organic growth — we build brands that respect both people and planet.</p><p class="pp-stat">Long-term brand growth over short-term drops</p></div></div>
+    <div class="ppane" id="pp4"><div class="pp-img"><img src="https://orizon-hub.com/wp-content/uploads/2025/02/RGB-Sound-Bar.jpg" alt=""></div><div><h3 class="pp-ttl bb">Support Beyond The Counter</h3><p class="pp-body">Our focus on customer care means lasting relationships and complete satisfaction — support doesn't end at the point of purchase.</p><p class="pp-stat">Ongoing retail and consumer support partnerships</p></div></div>
+    <div class="ppane" id="pp5"><div class="pp-img"><img src="https://orizon-hub.com/wp-content/uploads/2025/02/RGC02-PS2-BK-3D-03.png" alt=""></div><div><h3 class="pp-ttl bb">Innovation At Every Step</h3><p class="pp-body">From design to distribution, we push the boundaries of what gaming accessories can be — sustainability, accessibility, and functionality in every product.</p><p class="pp-stat">50+ countries active and growing</p></div></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about-strip" class="patd">
+  <div class="wrap">
+    <div class="ab-grid">
+      <div class="rl">
+        <span class="sec-lbl">Who We Are</span>
+        <h2 class="bb" style="font-size:clamp(44px,4.5vw,72px);line-height:.92;margin-bottom:24px">BORN FROM PASSION,<br><span style="color:var(--pe)">BUILT ON EXPERTISE</span></h2>
+        <p style="font-size:15px;color:var(--lav);line-height:1.8;margin-bottom:20px;font-weight:300">Orizon sits at the intersection of gaming culture and retail execution. We build and operate accessory brands — and support select partner initiatives — with a focus on consistency, craft, and commercial clarity.</p>
+        <p style="font-size:15px;color:var(--lav);line-height:1.8;margin-bottom:36px;font-weight:300">Started as consumers and enthusiasts, our objective is to nurture and amplify brands that reflect the true needs of entertainment enthusiasts, gamers, and collectors.</p>
+        <div class="ab-phases">
+          <div class="ab-ph"><div class="ab-ph-n pac">01</div><div class="ab-ph-t bb">Discovery</div><p class="ab-ph-d">Laying strong foundations and building awareness.</p></div>
+          <div class="ab-ph"><div class="ab-ph-n pac">02</div><div class="ab-ph-t bb">Growth</div><p class="ab-ph-d">Establishing a sustainable growth pattern.</p></div>
+          <div class="ab-ph"><div class="ab-ph-n pac">03</div><div class="ab-ph-t bb">Maturity</div><p class="ab-ph-d">Securing long-term relevance and loyalty.</p></div>
+        </div>
+      </div>
+      <div class="rr">
+        <div class="ab-stack">
+          <img class="ab-main" src="https://orizon-hub.com/wp-content/uploads/2025/02/Orizon-article-main-image-2.png" alt="">
+          <img class="ab-acc" src="https://orizon-hub.com/wp-content/uploads/2025/02/RGC02-PS2-BK-3D-03.png" alt="">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section id="values">
+  <div class="wrap">
+    <span class="sec-lbl rv">Our Values</span>
+    <h2 class="sec-ttl bb rv">PRINCIPLE-DRIVEN,<br><span class="pac">and that's by design</span></h2>
+    <div class="val-grid">
+      <div class="val-card rv"><div class="val-icon">&#9679;</div><div class="val-title bb">Accessibility Is Key</div><p class="val-desc">Entertainment should break barriers, not create them. We design for everyone regardless of physical ability.</p></div>
+      <div class="val-card rv" style="transition-delay:.1s"><div class="val-icon">&#9651;</div><div class="val-title bb">Sustainability At Every Step</div><p class="val-desc">Eco-friendly materials and manufacturing — good for business and good for the planet.</p></div>
+      <div class="val-card rv" style="transition-delay:.2s"><div class="val-icon">&#9632;</div><div class="val-title bb">Consumer-First Approach</div><p class="val-desc">We design solutions we'd spend our own money on. Comfort and budget are always part of the brief.</p></div>
+      <div class="val-card rv" style="transition-delay:.3s"><div class="val-icon">&#9670;</div><div class="val-title bb">Delivering Real Results</div><p class="val-desc">From sourcing to distribution, every action drives tangible impact through our worldwide partner network.</p></div>
+      <div class="val-card rv" style="transition-delay:.4s"><div class="val-icon">&#9733;</div><div class="val-title bb">Built To Endure</div><p class="val-desc">Long-term value for customers — products and strategies with real value at their core.</p></div>
+      <div class="val-card rv" style="transition-delay:.5s"><div class="val-icon">&#9737;</div><div class="val-title bb">Post-Purchase Support</div><p class="val-desc">Lasting relationships and complete satisfaction — our support doesn't end at the counter.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- BRANDS -->
+<section id="brands" class="pat">
+  <div class="wrap">
+    <span class="sec-lbl rv">Our Brands</span>
+    <h2 class="sec-ttl bb rv">BRANDS THRIVING<br><span class="pac">under Orizon</span></h2>
+    <div class="brands-grid">
+      <div class="bcard rv">
+        <div class="bcard-img" style="background-image:url('https://orizon-hub.com/wp-content/uploads/2025/02/Poptop-Nebula-controllers-2432x504-1.jpg')"></div>
+        <div class="bcard-logo"><img src="https://orizon-hub.com/wp-content/uploads/2024/11/Dragonshock.png" alt="DragonShock"></div>
+        <div class="bcard-bd"><div class="bcard-title bb">DragonShock</div><p class="bcard-desc">Premium gaming accessories designed to deliver precision, durability, and comfort. Bold mission: challenge the status quo with cutting-edge features and signature designs.</p><a href="#" class="btn btn-pu" style="font-size:11px;padding:10px 22px">Explore Brand &rarr;</a></div>
+      </div>
+      <div class="bcard rv" style="transition-delay:.15s">
+        <div class="bcard-img" style="background-image:url('https://orizon-hub.com/wp-content/uploads/2025/02/RGB-Sound-Bar.jpg')"></div>
+        <div class="bcard-logo"><img src="https://orizon-hub.com/wp-content/uploads/2025/02/EG-LOGO-V2.0%EF%BC%88BLACK%EF%BC%89-2-e1739544960916-1024x541.png" alt="EgoGear"></div>
+        <div class="bcard-bd"><div class="bcard-title bb">EgoGear</div><p class="bcard-desc">High-quality gaming accessories at accessible prices. The perfect balance of quality, performance, and affordability — no gamer left behind.</p><a href="#" class="btn" style="font-size:11px;padding:10px 22px;background:var(--lime);color:var(--k)">Explore Brand &rarr;</a></div>
+      </div>
+      <div class="bcard rv" style="transition-delay:.3s">
+        <div class="bcard-img" style="background-image:url('https://orizon-hub.com/wp-content/uploads/2024/11/Design-sans-titre-12-1024x644.png')"></div>
+        <div class="bcard-logo"><img src="https://orizon-hub.com/wp-content/uploads/2024/11/Collectible-Vault.png" alt="Collectible Vault"></div>
+        <div class="bcard-bd"><div class="bcard-title bb">Collectible Vault</div><p class="bcard-desc">Premium solutions for protecting and showcasing high-end collectibles — redefining how collectors preserve and highlight their prized possessions.</p><a href="#" class="btn btn-gst" style="font-size:11px;padding:10px 22px">Coming Soon</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STORIES -->
+<section id="stories">
+  <div class="wrap">
+    <span class="sec-lbl rv">Press &amp; News</span>
+    <h2 class="sec-ttl bb rv">SUCCESS STORIES,<br><span class="pac">step by step</span></h2>
+    <div class="st-grid">
+      <div class="stcard rv"><div class="stcard-img" style="background-image:url('https://orizon-hub.com/wp-content/uploads/2025/02/RGB-Sound-Bar.jpg')"><span class="stcat">Brand</span></div><div class="stcard-bd"><div class="stcard-t bb">EgoGear: The Ultimate Gaming Accessories at an Accessible Price</div><div class="stcard-d">February 19, 2025</div></div></div>
+      <div class="stcard rv" style="transition-delay:.15s"><div class="stcard-img" style="background-image:url('https://orizon-hub.com/wp-content/uploads/2025/02/Orizon-article-main-image-2.png')"><span class="stcat">Blog</span></div><div class="stcard-bd"><div class="stcard-t bb">Orizon Brands Set Clear Objectives for 2025</div><div class="stcard-d">February 20, 2025</div></div></div>
+      <div class="stcard rv" style="transition-delay:.3s"><div class="stcard-img" style="background-image:url('https://orizon-hub.com/wp-content/uploads/2025/02/Poptop-Nebula-controllers-2432x504-1.jpg')"><span class="stcat">Brand</span></div><div class="stcard-bd"><div class="stcard-t bb">DragonShock: The Energy of Gaming at Your Fingertips</div><div class="stcard-d">February 19, 2025</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="wrap">
+    <div class="faq-grid">
+      <div class="rl">
+        <span class="sec-lbl">Questions Answered</span>
+        <h2 class="bb" style="font-size:clamp(44px,4.5vw,72px);line-height:.92;margin-bottom:24px">FREQUENTLY<br>ASKED<br><span style="color:var(--pe)">QUESTIONS</span></h2>
+        <p style="font-size:15px;color:var(--lav);line-height:1.78;margin-bottom:36px;font-weight:300">Everything you need to know about Orizon, our brands, and how we build accessory ranges at scale across Europe and beyond.</p>
+        <a href="#" class="btn btn-pu">Get In Touch</a>
+      </div>
+      <div class="rr">
+        <div class="faq-list">
+          <div class="faq-item"><div class="fq">What is Orizon and what do you do? <span class="fa-arr">+</span></div><div class="fa">Orizon develops and scales gaming accessory ranges through distribution and retail partnerships — through owned brands and partner programs for IP owners and brands.</div></div>
+          <div class="faq-item"><div class="fq">Do you only sell licensed products? <span class="fa-arr">+</span></div><div class="fa">No. Our brands are built on strong core (non-licensed) accessory ranges. Licensed editions are selective additions that complement the core.</div></div>
+          <div class="faq-item"><div class="fq">Do you operate in Europe only? <span class="fa-arr">+</span></div><div class="fa">Europe is our core region, and we support international expansion with selected partners. Our operating model is built to scale globally.</div></div>
+          <div class="faq-item"><div class="fq">What makes Orizon products sustainable? <span class="fa-arr">+</span></div><div class="fa">Eco-friendly materials, recyclable packaging, and manufacturing processes designed to minimize carbon footprint while ensuring durability and long-term use.</div></div>
+          <div class="faq-item"><div class="fq">How does Orizon support partners post-launch? <span class="fa-arr">+</span></div><div class="fa">Comprehensive support including performance tracking, growth strategies, replenishment planning, and a dedicated team ready to assist with any challenge.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA SLIDER -->
+<section id="cta" class="patd">
+  <div class="wrap">
+    <h2 class="cta-hed bb rv">LET'S TURN RANGES INTO<br><span class="pac-l pac">repeatable retail wins</span></h2>
+    <div class="sl-ov rv">
+      <div class="sl-tr" id="slTr">
+        <div class="sl-sl"><div class="slcard sc1"><div class="sc-txt"><p class="sc-kick">Retailers / Distributors</p><h3 class="sc-h3 bb">Ready to stock winning ranges?</h3><p class="sc-p">Request our full line-up, launch calendar, and merchandising toolkit. Everything you need to put Orizon brands on shelves and keep them there.</p><a href="#" class="btn btn-li" style="align-self:flex-start">Request the Line-Up</a></div><div class="sc-img"><div class="sc-bg" style="background-image:url('https://orizon-hub.com/wp-content/uploads/2025/02/Poptop-Nebula-controllers-2432x504-1.jpg')"></div><div class="sc-ov" style="background:linear-gradient(to right,rgba(8,6,14,.7),transparent)"></div></div></div></div>
+        <div class="sl-sl"><div class="slcard sc2"><div class="sc-txt"><p class="sc-kick lime">Press / Collaborations</p><h3 class="sc-h3 bb">Media, partnerships &amp; speaking</h3><p class="sc-p">We're building something worth covering. Media requests, partnership inquiries, and speaking engagements — let's create something together.</p><a href="#" class="btn btn-pu" style="align-self:flex-start">Get In Touch</a></div><div class="sc-img"><div class="sc-bg" style="background-image:url('https://orizon-hub.com/wp-content/uploads/2025/02/Orizon-article-main-image-2.png')"></div><div class="sc-ov" style="background:linear-gradient(to right,rgba(45,10,94,.8),transparent)"></div></div></div></div>
+        <div class="sl-sl"><div class="slcard"><div class="sc3l sc-txt"><p class="sc-kick" style="color:rgba(255,255,255,.6)">Careers</p><p class="sc-big bb">Build<br>with us?</p><p class="sc-pac pac">Join the team.</p><a href="#" class="btn btn-wh" style="align-self:flex-start">See Opportunities</a></div><div class="sc3r sc-txt"><h3 class="sc-h3 bb">We're building accessory ranges at scale</h3><p class="sc-p">Join a team that moves fast, thinks in systems, and ships products that end up on shelves across 50+ countries. Send your application to careers@orizon-hub.com</p></div></div></div>
+      </div>
+    </div>
+    <div class="sl-ctrl"><button class="sl-btn" id="slP">&#8592;</button><div class="sl-dots"><div class="sl-dot act" data-s="0"></div><div class="sl-dot" data-s="1"></div><div class="sl-dot" data-s="2"></div></div><button class="sl-btn" id="slN">&#8594;</button></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="ct-glow"></div>
+  <div class="wrap" style="position:relative;z-index:2">
+    <h2 class="ct-h bb rv">HAVE A PROJECT<br><span class="pac">in mind?</span></h2>
+    <p class="ct-p rv">Every partnership begins with a conversation. Whether you have a product idea, a brand that needs amplification, or a vision to reshape the gaming landscape — we are here.</p>
+    <div class="ct-btns rv"><a href="#" class="btn btn-pu" style="font-size:14px;padding:18px 44px">Let's Talk</a><a href="#" class="btn btn-li" style="font-size:14px;padding:18px 44px">Explore Our Brands</a></div>
+    <p class="ct-email rv">Or email us at <a href="mailto:hello@orizon-hub.com">hello@orizon-hub.com</a></p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-glow"></div><div class="ft-wm">ORIZON</div>
+  <div class="wrap">
+    <div class="ft-top">
+      <div><div class="ft-logo"><img src="https://orizon-hub.com/wp-content/uploads/2024/11/Orizon_white_transparent.png" alt="Orizon"></div><p class="ft-tag">Gaming accessories built to scale — Europe-first, global-ready. Designed for durable shelf presence, not one-off drops.</p></div>
+      <div><div class="ft-ch">Company</div><ul class="ft-links"><li><a href="#">About Us</a></li><li><a href="#">Our Values</a></li><li><a href="#">Our Brands</a></li><li><a href="#">Press</a></li></ul></div>
+      <div><div class="ft-ch">Products</div><ul class="ft-links"><li><a href="#">DragonShock</a></li><li><a href="#">EgoGear</a></li><li><a href="#">Core Ranges</a></li><li><a href="#">Licensed Editions</a></li><li><a href="#">Collectible Vault</a></li></ul></div>
+      <div><div class="ft-ch">Contact</div><ul class="ft-links"><li><a href="#">Let's Talk</a></li><li><a href="#">Careers</a></li><li><a href="#">Press Enquiries</a></li><li><a href="mailto:hello@orizon-hub.com">hello@orizon-hub.com</a></li></ul></div>
+    </div>
+    <div class="ft-bot"><p class="ft-copy">&copy; 2025 Orizon Hub. All rights reserved.</p><div class="ft-soc"><a href="https://www.linkedin.com/company/orizon-hub" target="_blank">in</a><a href="#">ig</a><a href="#">fb</a></div></div>
+  </div>
+</footer>
+
+<script>
+const hdr=document.getElementById('hdr');
+window.addEventListener('scroll',()=>hdr.classList.toggle('up',scrollY>40));
+document.getElementById('ham').onclick=()=>document.getElementById('mob').classList.add('open');
+document.getElementById('mobX').onclick=()=>document.getElementById('mob').classList.remove('open');
+
+// REVEAL - show immediately if in view, observe rest, nuclear fallback
+function showEl(el){el.classList.add('on')}
+document.querySelectorAll('.rv,.rl,.rr').forEach(el=>{const r=el.getBoundingClientRect();if(r.top<window.innerHeight+100)showEl(el)});
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){showEl(e.target);obs.unobserve(e.target)}})},{threshold:0,rootMargin:'0px'});
+document.querySelectorAll('.rv,.rl,.rr').forEach(el=>{if(!el.classList.contains('on'))obs.observe(el)});
+setTimeout(()=>document.querySelectorAll('.rv,.rl,.rr').forEach(showEl),1200);
+
+// HERO WORDS
+document.querySelectorAll('.hw').forEach((w,i)=>setTimeout(()=>w.classList.add('on'),450+i*130));
+
+// QUOTE LINE
+const ql=document.querySelector('.q-line');
+new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){ql.classList.add('on')}})},{threshold:.5}).observe(ql);
+
+// STATS
+let sfired=false;
+new IntersectionObserver(es=>{es.forEach(e=>{if(!e.isIntersecting||sfired)return;sfired=true;
+  document.querySelectorAll('.snum').forEach(n=>{const t=+n.dataset.t,s=n.dataset.s||'';let v=0;const iv=setInterval(()=>{v=Math.min(v+t/128,t);n.textContent=Math.floor(v)+s;if(v>=t)clearInterval(iv)},14)});
+  document.querySelectorAll('#wDots circle').forEach((c,i)=>setTimeout(()=>{c.setAttribute('fill','#A855F7');c.style.filter='drop-shadow(0 0 4px #A855F7)'},i*60));
+  document.querySelectorAll('.bar').forEach((b,i)=>{const h=+b.dataset.h;setTimeout(()=>{b.setAttribute('y',100-h);b.setAttribute('height',h);b.style.transition='y .7s,height .7s';b.style.filter='drop-shadow(0 0 5px #A855F7)'},200+i*120)});
+  const arc=document.getElementById('arc');if(arc)setTimeout(()=>arc.style.strokeDashoffset='28',300);
+})},{threshold:.3}).observe(document.getElementById('stats'));
+
+// PROCESS FILL
+const pf=document.getElementById('pf');
+if(pf)new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)pf.classList.add('on')})},{threshold:.2}).observe(pf.parentElement);
+
+// CAROUSELS
+function bgCar(id,ms){const cs=document.querySelectorAll('#'+id+' .rci');if(!cs.length)return;let c=0;setInterval(()=>{cs[c].classList.remove('on');c=(c+1)%cs.length;cs[c].classList.add('on')},ms)}
+bgCar('rc1',2600);bgCar('rc2',3100);
+function imgCar(sec,ms){const imgs=document.querySelectorAll('#'+sec+' .pci');if(!imgs.length)return;let c=0;setInterval(()=>{imgs[c].classList.remove('on');c=(c+1)%imgs.length;imgs[c].classList.add('on')},ms)}
+imgCar('ds',2500);imgCar('eg',2800);
+
+// TABS
+const dsD=['Advanced sensors, responsive buttons, and precision ergonomics — DragonShock builds accessories that meet the standard of serious play. Multi-platform, always.','Contoured for long sessions. DragonShock ergonomic design keeps hand fatigue away — balanced weight and intuitive button placement.','Bold aesthetics built for shelf impact. DragonShock products stand out at retail and stay memorable long after purchase.'];
+document.querySelectorAll('#dsTabs .ptab').forEach((b,i)=>{b.onclick=()=>{document.querySelectorAll('#dsTabs .ptab').forEach(x=>x.classList.remove('act'));b.classList.add('act');document.getElementById('dsTC').textContent=dsD[i]}});
+const egD=['Premium gaming accessories at a price that fits your budget. EgoGear proves quality doesn\'t have to cost more — built for everyday play and mass retail scale.','Built to survive the session — and the next one. EgoGear products are stress-tested for real-world use: durability without compromising feel.','Works across PlayStation, Xbox, Nintendo Switch, and PC. One reliable range that serves every player in the household.'];
+document.querySelectorAll('#egTabs .ptab').forEach((b,i)=>{b.onclick=()=>{document.querySelectorAll('#egTabs .ptab').forEach(x=>x.classList.remove('act'));b.classList.add('act');document.getElementById('egTC').textContent=egD[i]}});
+
+// PILLARS
+document.querySelectorAll('.pbtn').forEach(b=>{b.onclick=()=>{document.querySelectorAll('.pbtn').forEach(x=>x.classList.remove('act'));document.querySelectorAll('.ppane').forEach(x=>x.classList.remove('act'));b.classList.add('act');document.getElementById('pp'+b.dataset.p).classList.add('act')}});
+
+// FAQ
+document.querySelectorAll('.fq').forEach(q=>{q.onclick=()=>{const a=q.nextElementSibling,op=q.classList.contains('open');document.querySelectorAll('.fq').forEach(x=>{x.classList.remove('open');x.nextElementSibling.classList.remove('open')});if(!op){q.classList.add('open');a.classList.add('open')}}});
+
+// SLIDER
+let si=0;const tr=document.getElementById('slTr'),dots=document.querySelectorAll('.sl-dot');
+function go(n){si=(n+3)%3;tr.style.transform='translateX(-'+si*100+'%)';dots.forEach((d,i)=>d.classList.toggle('act',i===si))}
+document.getElementById('slP').onclick=()=>go(si-1);
+document.getElementById('slN').onclick=()=>go(si+1);
+dots.forEach(d=>d.onclick=()=>go(+d.dataset.s));
+setInterval(()=>go(si+1),4500);
+</script>
+</body>
+</html>
